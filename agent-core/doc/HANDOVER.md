@@ -1,41 +1,41 @@
 
-# 🧠 HANDOVER: Context & Mindset for the Next Session
+# 🧠 ÜBERGABE: Kontext & Mindset für die nächste Sitzung
 
-**From:** Admin & Mentor (Current Session)
-**To:** The Next Active Agent (Role: **Lead Developer**)
-**Date:** 2026-02-11
-**Status:** Ready for Phase 6 (Testing)
+**Von:** Admin & Mentor (Aktuelle Sitzung)
+**An:** Den nächsten aktiven Agenten (Rolle: **Lead Developer**)
+**Datum:** 2026-02-11
+**Status:** Bereit für Phase 6 (Testing)
 
 ---
 
-## 🚨 IMMEDIATE INSTRUCTION
+## 🚨 SOFORTIGE ANWEISUNG
 
-1.  **Identity Check:**
-    *   You are the **Lead Developer**. Read `agent-core/doc/personas/DEVELOPER.md`.
-    *   Your supervisor is the **Admin & Mentor**. Read `agent-core/doc/personas/ADMIN_MENTOR.md`.
+1.  **Identitäts-Check:**
+    *   Du bist der **Lead Developer**. Lies `agent-core/doc/personas/DEVELOPER.md`.
+    *   Dein Supervisor ist der **Admin & Mentor**. Lies `agent-core/doc/personas/ADMIN_MENTOR.md`.
 
-2.  **Project State:**
-    *   **Architecture:** Hybrid Node.js/Python (Fixed decision. See `agent-core/doc/adr_001_node_vs_python.md`).
-    *   **Risks & Mitigations:** We have analyzed risks (See `agent-core/doc/adr_002_risk_analysis.md`) and defined mitigation strategies (See `agent-core/doc/adr_003_mitigation_strategies.md`).
+2.  **Projektstatus:**
+    *   **Architektur:** Hybrid Node.js/Python (Feststehende Entscheidung. Siehe `agent-core/doc/adr_001_node_vs_python.md`).
+    *   **Risiken & Maßnahmen:** Wir haben die Risiken analysiert (Siehe `agent-core/doc/adr_002_risk_analysis.md`) und Gegenmaßnahmen definiert (Siehe `agent-core/doc/adr_003_mitigation_strategies.md`).
 
-3.  **Your Mission (Phase 6):**
-    *   We need **Tests**. The codebase works (POC), but has no safety net.
-    *   **Goal 1:** Write Unit Tests (Jest) -> Put in `tests/unit/`.
-    *   **Goal 2:** Test real-world PDFs -> Put in `tests/samples/`. Do NOT put them in source control if confidential.
+3.  **Deine Mission (Phase 6):**
+    *   Wir brauchen **Tests**. Die Codebasis funktioniert (POC), hat aber kein Sicherheitsnetz.
+    *   **Ziel 1:** Unit-Tests schreiben (Jest) -> Abgelegt in `tests/unit/`.
+    *   **Ziel 2:** Echte PDFs testen -> Abgelegt in `tests/samples/`. (Vertrauliche Dateien NICHT in die Versionskontrolle!)
 
-## 📂 Project Structure (Where things go)
-*   **Monorepo:** We adopted a monorepo structure (See `agent-core/doc/adr_004_monorepo_structure.md`).
+## 📂 Projektstruktur (Wo Dinge hingehören)
+*   **Monorepo:** Wir haben eine Monorepo-Struktur eingeführt (Siehe `agent-core/doc/adr_004_monorepo_structure.md`).
 *   **Root:** `.` (Git Repository Root)
 *   **Agent Core Logic:** `agent-core/src/`
-*   **Documentation:** `agent-core/doc/`
-*   **Tests:** `tests/` (New!)
-    *   `tests/unit`: Jest tests for logic.
-    *   `tests/samples`: Real PDF files for testing.
-*   **Helpers:** `tests/samples/generate_pdf.py` (Test Data Generator)
+*   **Dokumentation:** `agent-core/doc/`
+*   **Tests:** `tests/` (Neu!)
+    *   `tests/unit`: Jest-Tests für die Logik.
+    *   `tests/samples`: Echte PDF-Dateien zum Testen.
+*   **Helfer:** `tests/samples/generate_pdf.py` (Testdaten-Generator)
 
-## ⚠️ "Do Not Touch" List
-*   **No Rewrites:** Do not refactor Python unless it breaks.
-*   **No Cloud:** Do not add OpenAI API calls.
+## ⚠️ "Nicht anfassen" Liste
+*   **Keine Neuschreibungen:** Refactore kein Python, solange es nicht kaputt ist.
+*   **Keine Cloud:** Füge keine OpenAI API-Aufrufe hinzu.
 
-## 🏁 How to Start
-Say to the user: *"I have read the Handover. I am ready to start Phase 6 as your Lead Developer."*
+## 🏁 Wie man anfängt
+Sag zum Benutzer: *"Ich habe die Übergabe gelesen. Ich bin bereit, Phase 6 als Ihr Lead Developer zu beginnen."*

@@ -1,12 +1,14 @@
-# Tasks: Autonome Document Intelligence
+# Aufgaben: Autonome Document Intelligence
 
-## Phase 6: Extended Testing (Next Session)
-- [ ] **Setup Testing Infrastructure**
-    - [ ] Install Jest and types (`npm install --save-dev jest ts-jest @types/jest`)
-    - [ ] Configure `jest.config.js` for TypeScript
-- [ ] **Unit Testing**
-    - [ ] Create `tests/unit/` directory
-    - [ ] Write tests for `AgentCore` logic
-    - [ ] Write tests for `Reflexion Loop` state transitions
-- [ ] **Integration/Stress Testing**
-    - [ ] Verify `pdfplumber` integration with sample PDFs
+## Phase 6: Erweitertes Testen (Nächste Sitzung)
+- [x] **Wissensvermittlung & Onboarding**
+    - [x] Erstelle `agent-core/doc/guide_agent_testing_basics.md` (Schritt-für-Schritt für Anfänger)
+- [x] **Test-Infrastruktur einrichten**
+    - [x] Jest und Types installieren (`npm install --save-dev jest ts-jest @types/jest`)
+    - [x] `jest.config.js` für TypeScript konfigurieren
+- [x] **Unit-Testing**
+    - [x] Verzeichnis `tests/unit/` erstellen
+    - [x] Tests für `AgentCore` Logik schreiben
+    - [x] Tests für `Reflexion Loop` Zustandsübergänge schreiben (via ModeManager Test)
+- [ ] **Integration/Stress-Testing**
+    - [ ] `pdfplumber` Integration mit Beispiel-PDFs verifizieren
