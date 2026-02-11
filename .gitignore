@@ -1,0 +1,33 @@
+# Dependencies
+node_modules/
+venv/
+__pycache__/
+*.pyc
+
+# Environment
+.env
+.env.local
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Generic
+tmp/
+dist/
+build/
+coverage/
+
+# IDE
+.vscode/
+.idea/
+
+# Testing
+tests/samples/*.pdf
+!tests/samples/generate_pdf.py

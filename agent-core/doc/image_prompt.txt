@@ -1,0 +1,16 @@
+
+**Prompt für Nano Bana (Architecture Flow):**
+
+"A futuristic, isometric 3D visualization of an autonomous AI agent's internal data flow.
+Style: High-tech, clean, 'Quantum Glass' aesthetic with neon blue and amber accents on a dark background.
+
+**Key Elements:**
+1.  **Input (Left):** A stream of digital documents (PDF icons) flowing into a glowing, mechanical 'Eye' module (Ingestion).
+2.  **Center (The Core):** A complex, glowing neural network sphere or crystalline brain processing the data (Reasoning).
+3.  **Loop (Reflexion):** A circular data stream verifying the output against a holographic mirror or checklist, sending errors back to the center (Reflexion Loop).
+4.  **Evolution (Top):** A DNA-helix-like structure connecting to the code, symbolizing self-improvement.
+5.  **Output (Right):** Structured, glowing data blocks and reports being filed into a sleek, digital archive (Memory).
+
+**Lighting:** Soft, volumetric lighting with glowing data pathways connecting the modules.
+**Color Palette:** Deep navy, cyan, electric blue, and warm amber for alerts/checks.
+**Vibe:** Sophisticated, precise, and autonomous."
