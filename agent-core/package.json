@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest --colors 2>&1",
+    "test:quiet": "jest --silent --colors 2>&1",
     "build": "tsc"
   },
   "keywords": [],

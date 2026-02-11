@@ -55,9 +55,13 @@ chcp 65001
 npm test
 ```
 
+
 Du wirst sehen:
 - **GRÜN (PASS):** Alles gut. Der Agent hat verstanden.
 - **ROT (FAIL):** Der Agent hat Quatsch gemacht. Wir müssen den Prompt anpassen.
+
+> **Pro-Tipp:** Wenn dich die vielen Ausgaben stören, nutze `npm run test:quiet`. Dann siehst du nur das Ergebnis.
+
 
 ## 4. Was tun bei Fehlern?
 
