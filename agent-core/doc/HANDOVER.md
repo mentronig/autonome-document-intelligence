@@ -16,7 +16,7 @@
 
 2.  **Project State:**
     *   **Architecture:** Hybrid Node.js/Python (Fixed decision. See `agent-core/doc/adr_001_node_vs_python.md`).
-    *   **Risks:** We know about the "Dual Runtime" and "Stdout Bridge" risks (See `agent-core/doc/adr_002_risk_analysis.md`).
+    *   **Risks & Mitigations:** We have analyzed risks (See `agent-core/doc/adr_002_risk_analysis.md`) and defined mitigation strategies (See `agent-core/doc/adr_003_mitigation_strategies.md`).
 
 3.  **Your Mission (Phase 6):**
     *   We need **Tests**. The codebase works (POC), but has no safety net.
@@ -24,6 +24,7 @@
     *   **Goal 2:** Test real-world PDFs -> Put in `tests/samples/`. Do NOT put them in source control if confidential.
 
 ## 📂 Project Structure (Where things go)
+*   **Monorepo:** We adopted a monorepo structure (See `agent-core/doc/adr_004_monorepo_structure.md`).
 *   **Root:** `.` (Git Repository Root)
 *   **Agent Core Logic:** `agent-core/src/`
 *   **Documentation:** `agent-core/doc/`
