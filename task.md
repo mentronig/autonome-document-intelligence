@@ -10,5 +10,5 @@
     - [x] Verzeichnis `tests/unit/` erstellen
     - [x] Tests für `AgentCore` Logik schreiben
     - [x] Tests für `Reflexion Loop` Zustandsübergänge schreiben (via ModeManager Test)
-- [ ] **Integration/Stress-Testing**
-    - [ ] `pdfplumber` Integration mit Beispiel-PDFs verifizieren
+- [x] **Integration/Stress-Testing**
+    - [x] `pdfplumber` Integration mit Beispiel-PDFs verifizieren (alle 6 Samples als Stress-Test)

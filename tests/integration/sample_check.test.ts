@@ -20,45 +20,40 @@ describe('Integration Test: PDF Samples', () => {
         // console.log('Found PDFs:', pdfs);
     });
 
-    test('pdf_parser.py should extract text from a sample PDF', (done) => {
-        // Find a valid PDF
+    test('pdf_parser.py should extract text from ALL sample PDFs (Stress Test)', async () => {
         const files = fs.readdirSync(samplesDir);
-        const pdf = files.find(f => f.endsWith('.pdf') && !f.includes('Dummy')); // Skip dummy if present
+        const pdfs = files.filter(f => f.endsWith('.pdf'));
 
-        if (!pdf) {
-            console.warn('No real PDF found for integration test. Skipping.');
-            done();
+        if (pdfs.length === 0) {
+            console.warn('No PDFs found. Skipping stress test.');
             return;
         }
 
-        const pdfPath = path.join(samplesDir, pdf);
-        // Correct path to python script: ../../agent-core/pdf_parser.py (relative to this test file)
-        const scriptPath = path.join(__dirname, '../../agent-core/pdf_parser.py');
+        console.log(`Starting stress test on ${pdfs.length} documents...`);
 
-        const command = `python "${scriptPath}" "${pdfPath}"`;
-        // console.log(`Executing: ${command}`);
+        // Process sequentially to avoid spawning too many python processes at once
+        // (Simulating a queue)
+        for (const pdf of pdfs) {
+            const pdfPath = path.join(samplesDir, pdf);
+            const scriptPath = path.join(__dirname, '../../agent-core/pdf_parser.py');
+            const command = `python "${scriptPath}" "${pdfPath}"`;
 
-        exec(command, (error, stdout, stderr) => {
-            if (error) {
-                console.error(`Error executing python script: ${error.message}`);
-                console.error(`Stderr: ${stderr}`);
-                // Don't fail if python environment is not set up perfectly in this environment yet, just warn
-                // But generally we expect it to work. 
-                // Let's output it.
-                done(error);
-                return;
-            }
-
-            try {
-                // console.log('Python Output:', stdout); // Too verbose
-                const result = JSON.parse(stdout);
-                expect(result).toBeDefined();
-                expect(result.text).toBeDefined();
-                expect(result.text.length).toBeGreaterThan(10);
-                done();
-            } catch (e) {
-                done(e);
-            }
-        });
-    }, 30000); // 30s timeout
+            await new Promise<void>((resolve, reject) => {
+                exec(command, (error, stdout, stderr) => {
+                    if (error) {
+                        return reject(new Error(`Failed on ${pdf}: ${error.message}\nStderr: ${stderr}`));
+                    }
+                    try {
+                        const result = JSON.parse(stdout);
+                        expect(result).toBeDefined();
+                        expect(result.text.length).toBeGreaterThan(10);
+                        // console.log(`√ Processed ${pdf} (${result.numpages} pages)`);
+                        resolve();
+                    } catch (e) {
+                        reject(new Error(`JSON Parse error on ${pdf}: ${e}`));
+                    }
+                });
+            });
+        }
+    }, 120000); // 2 minutes timeout for stress test
 });
