@@ -18,6 +18,7 @@ describe('AgentCore Unit Tests', () => {
     // Type checking for mocks
     const MockPdfLoader = PdfIngestionSkill as jest.MockedClass<typeof PdfIngestionSkill>;
     const MockOllama = OllamaClient as jest.MockedClass<typeof OllamaClient>;
+    const MockReflexion = ReflexionEngine as jest.MockedClass<typeof ReflexionEngine>;
 
     beforeEach(() => {
         // Reset mocks before each test
@@ -31,6 +32,11 @@ describe('AgentCore Unit Tests', () => {
                 totalPages: 1,
                 source: 'dummy.pdf'
             }
+        });
+        MockReflexion.prototype.run.mockResolvedValue({
+            summary: 'Mocked Summary',
+            pbis: [],
+            crs: []
         });
 
         agent = new AgentCore({
