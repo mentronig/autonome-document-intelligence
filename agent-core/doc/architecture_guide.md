@@ -80,19 +80,21 @@ Dann testet er den neuen Code gegen alte "Erfolgs-Kapseln" (Success Capsules), u
 
 ## 5. Projektstruktur (Wo finde ich was?)
 
-Ihr Projektordner (`agent-core`) ist so aufgebaut:
+Das Projekt ist als **Monorepo** organisiert. Das bedeutet, alle Teile des Systems liegen in einem Hauptordner:
+
+*   **`@Root`** (Hauptverzeichnis)
+    *   `task.md` - Die aktuelle Aufgabenliste.
+    *   `tests/` - Systemweite Tests & Beispieldateien (PDFs).
+    *   `agent-core/` - **Der eigentliche Agent** (Das "Backend").
+
+Innerhalb von **`agent-core/`** finden Sie:
 
 *   `src/` - Der Quellcode (Source).
     *   `src/engine/` - Das Herzstück (`AgentCore`, `ReflexionEngine`).
-    *   `src/skills/` - Die Fähigkeiten.
-        *   `ingestion/` - PDF lesen.
-        *   `reasoning/` - Analysieren.
-        *   `evolution/` - Selbstverbesserung.
-    *   `src/memory/` - Speicherfunktionen.
-    *   `src/infrastructure/` - Verbindung zu Ollama & ChromaDB.
-*   `dist/` - Der *übersetzte* Code (JavsScript), den der Computer tatsächlich ausführt.
-*   `memory/` - Hier landen die Berichte und Logs.
-*   `doc/` - Dokumentation (diese Datei!).
+    *   `src/skills/` - Die Fähigkeiten (PDF lesen, Analysieren, Lernen).
+    *   `src/memory/` - Speicherfunktionen (ChromaDB).
+*   `dist/` - Der *übersetzte* Code (JavaScript).
+*   `doc/` - Dokumentation & ADRs.
 
 ---
 
