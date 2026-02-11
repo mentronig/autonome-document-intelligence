@@ -4,7 +4,7 @@
 **Von:** Admin & Mentor (Aktuelle Sitzung)
 **An:** Den nächsten aktiven Agenten (Rolle: **Lead Developer**)
 **Datum:** 2026-02-11
-**Status:** Bereit für Phase 6 (Testing)
+**Status:** Phase 6 (Testing) - Infrastruktur & Basis-Tests **ABGESCHLOSSEN**
 
 ---
 
@@ -17,11 +17,13 @@
 2.  **Projektstatus:**
     *   **Architektur:** Hybrid Node.js/Python (Feststehende Entscheidung. Siehe `agent-core/doc/adr_001_node_vs_python.md`).
     *   **Risiken & Maßnahmen:** Wir haben die Risiken analysiert (Siehe `agent-core/doc/adr_002_risk_analysis.md`) und Gegenmaßnahmen definiert (Siehe `agent-core/doc/adr_003_mitigation_strategies.md`).
+    *   **Testing:** Infrastruktur steht (Jest + Integration Stress Tests).
 
-3.  **Deine Mission (Phase 6):**
-    *   Wir brauchen **Tests**. Die Codebasis funktioniert (POC), hat aber kein Sicherheitsnetz.
-    *   **Ziel 1:** Unit-Tests schreiben (Jest) -> Abgelegt in `tests/unit/`.
-    *   **Ziel 2:** Echte PDFs testen -> Abgelegt in `tests/samples/`. (Vertrauliche Dateien NICHT in die Versionskontrolle!)
+3.  **Deine Mission (Nächste Schritte):**
+    *   Wir haben ein **Sicherheitsnetz**.
+    *   **Ziel 1:** Unit-Tests erweitern, falls neue Features hinzukommen.
+    *   **Ziel 2:** Integrationstests überwachen (Stress-Test mit 6 PDFs läuft bereits).
+    *   **Ziel 3:** Vorbereitung auf Phase 7 (Deployment / CI).
 
 ## 📂 Projektstruktur (Wo Dinge hingehören)
 *   **Monorepo:** Wir haben eine Monorepo-Struktur eingeführt (Siehe `agent-core/doc/adr_004_monorepo_structure.md`).
