@@ -4,9 +4,9 @@ import path from 'path';
 export interface SuccessCapsule {
   id: string;
   timestamp: number;
-  input: any;
-  expectedOutput: any;
-  metadata: any;
+  input: unknown;
+  expectedOutput: unknown;
+  metadata: Record<string, unknown>;
 }
 
 export class SuccessCapsuleManager {
@@ -19,7 +19,11 @@ export class SuccessCapsuleManager {
     }
   }
 
-  async saveCapsule(input: any, output: any, metadata: any = {}): Promise<string> {
+  async saveCapsule(
+    input: unknown,
+    output: unknown,
+    metadata: Record<string, unknown> = {},
+  ): Promise<string> {
     const id = `capsule_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`;
     const capsule: SuccessCapsule = {
       id,
@@ -49,7 +53,7 @@ export class SuccessCapsuleManager {
   }
 
   async validate(
-    processor: (input: any) => Promise<any>,
+    processor: (input: unknown) => Promise<unknown>,
   ): Promise<{ success: boolean; failures: string[] }> {
     const capsules = await this.loadAllCapsules();
     const failures: string[] = [];

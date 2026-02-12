@@ -27,6 +27,8 @@ coverage/
 # Memory & Logs
 memory/logs/
 memory/capsules/
+memory/*.json
+memory/*.md
 debug_output*.txt
 
 # IDE

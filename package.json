@@ -40,5 +40,11 @@
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.55.0"
+  },
+  "dependencies": {
+    "chromadb": "^3.3.0",
+    "dotenv": "^17.2.4",
+    "ollama": "^0.6.3",
+    "zod": "^4.3.6"
   }
 }

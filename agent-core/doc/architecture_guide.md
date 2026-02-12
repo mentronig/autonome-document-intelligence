@@ -22,54 +22,54 @@ Unser Agent ist **autonom**, weil er:
 
 Man kann die Architektur mit dem menschlichen Körper vergleichen:
 
-| Komponente     | Analogie            | Funktion im Agenten                                                                         | Tech-Stack               |
-| :------------- | :------------------ | :------------------------------------------------------------------------------------------ | :----------------------- |
-| **Agent Core** | **Gehirn/Zentrale** | Steuert alle anderen Teile. Entscheidet, was als nächstes passiert.                         | Node.js (TypeScript)     |
-| **Ingestion**  | **Augen**           | Liest Dokumente (PDFs) und wandelt sie in verständlichen Text um.                           | Python (`pdfplumber`)    |
-| **Reasoning**  | **Gedanken**        | Analysiert den Text, sucht nach Fehlern (Production Problems) und zieht Schlussfolgerungen. | LLM (Llama 3 via Ollama) |
-| **Reflexion**  | **Gewissen/Kritik** | Überprüft die eigenen Ergebnisse auf Logikfehler. "Habe ich das Format eingehalten?"        | TypeScript (RegEx)       |
-| **Evolution**  | **Hände/Lernen**    | Schreibt den eigenen Code um, wenn ein neues Dokumentenformat nicht passt.                  | `CapabilityEvolver`      |
-| **Memory**     | **Gedächtnis**      | Speichert Ergebnisse langfristig ab.                                                        | ChromaDB & Dateien       |
+| Komponente        | Analogie              | Funktion im Agenten                                                                          | Tech-Stack                  |
+| :---------------- | :-------------------- | :------------------------------------------------------------------------------------------- | :-------------------------- |
+| **Agent Core**    | **Gehirn/Zentrale**   | Steuert alle anderen Teile. Entscheidet, was als nächstes passiert.                          | Node.js (TypeScript)        |
+| **Skill Manager** | **Talent-Verwaltung** | Kennt alle Fähigkeiten (Skills) des Agenten und wählt die passende aus.                      | TypeScript (`SkillManager`) |
+| **Skills**        | **Fähigkeiten**       | Spezialisierte Module für bestimmte Aufgaben (z.B. "T2 Impact Analyse", "Rechnungsprüfung"). | TypeScript (`ISkill`)       |
+| **Ingestion**     | **Augen**             | Liest Dokumente (PDFs) und wandelt sie in verständlichen Text um.                            | Python (`pdfplumber`)       |
+| **LLM Client**    | **Sprachzentrum**     | Die Schnittstelle zur KI (Ollama). Führt die Befehle der Skills aus.                         | Llama 3 via Ollama          |
+| **Memory**        | **Gedächtnis**        | Speichert Ergebnisse langfristig ab.                                                         | Dateisystem (JSON/MD)       |
 
 ---
 
-## 3. Der Ablauf: Vom PDF zur Analyse
+## 3. Der Ablauf: Vom PDF zur Analyse (Skill Architecture)
 
-Hier ist der Weg, den ein Dokument durch den Agenten nimmt:
+Seit Phase 10 ("The Brain Expansion") ist der Agent nicht mehr fest verdrahtet, sondern **dynamisch**.
+Er lädt je nach Aufgabe den passenden Skill und die passende Konfiguration.
 
 ```mermaid
 graph TD
     A[Start: PDF-Datei] --> B(Ingestion: Augen);
-    B --> C{Lesbar?};
-    C -- Nein --> D[Fehler melden];
-    C -- Ja --> E(Reasoning: Nachdenken);
-    E --> F[LLM analysiert Text];
-    F --> G(Reflexion: Selbstkritik);
-    G --> H{Ergebnis gut?};
-    H -- Nein --> I[Kritik & Neuversuch];
-    I --> F;
-    H -- Ja --> J(Speichern & Lernen);
-    J --> K[Logbook & Success Capsule];
-    K --> L[Ende: Bericht fertig];
+    B --> C{Skill wählen};
+    C -->|z.B. T2 Analyse| D[Skill: T2 Impact Analyzer];
+    D --> E[Lade Konfiguration (z.B. kfw.json)];
+    E --> F[Prompt Generierung (mit Kontext)];
+    F --> G(LLM: Llama 3);
+    G --> H[Validierung (Zod-Schema)];
+    H -->|Fehler| G;
+    H -->|OK| I[Ergebnis Aggregation];
+    I --> J[Ende: Strukturierter Bericht];
 ```
 
-### Schritt 1: Ingestion (Die Augen)
+### Schritt 1: Ingestion & Skill Selection
 
-Der Agent nutzt ein **Python-Skript**, um PDFs zu lesen. Warum Python? Weil Python die besten Bibliotheken für Datenverarbeitung hat. Node.js ruft dieses Skript nur auf und bekommt den Text zurück.
+Der Agent liest das PDF und entscheidet (oder wird konfiguriert), welchen **Skill** er nutzen soll.
+Für T2 Release Notes wählt er den `T2ImpactSkill`.
 
-### Schritt 2: Reasoning & Reflexion (Das Denken)
+### Schritt 2: Context Injection (Das "Wissen")
 
-Hier passiert die Magie.
+Der Skill lädt eine Konfigurationsdatei (z.B. `kfw.json`).
+Das ist neu in Phase 10: Der Agent weiß nun, dass er für die **KfW** arbeitet und kennt deren Systeme (TPH, ESMIG, etc.).
+Er injiziert dieses Wissen direkt in den Prompt für die KI.
 
-1.  **Actor:** Der Agent sendet den Text an das LLM (Llama 3) mit der Anweisung: "Finde alle Produktionsprobleme (PBIs)".
-2.  **Evaluator:** Der Agent prüft die Antwort _ohne_ KI, mit strengen Regeln (z.B. "Hat jedes PBI eine ID wie `PBI-12345`?").
-3.  **Loop:** Wenn der Evaluator "Nein" sagt, gibt er das Feedback an den Actor zurück ("Du hast die ID vergessen, versuch es nochmal!"). Das wiederholt sich, bis das Ergebnis perfekt ist.
+### Schritt 3: Reasoning & Validation (Das Denken)
 
-### Schritt 3: Evolution (Das Lernen)
+Der Skill führt die Analyse durch:
 
-Wenn der Agent auf ein Dokument stößt, das er _nicht_ verarbeiten kann (z.B. ein komplett neues Layout), kann er in den **Evolution Mode** schalten.
-Er bittet das LLM: "Schau dir meinen Code an und schau dir diesen Fehler an. Schreib mir eine bessere Version meines Codes."
-Dann testet er den neuen Code gegen alte "Erfolgs-Kapseln" (Success Capsules), um sicherzugehen, dass er nichts Altes kaputt gemacht hat.
+1.  **Prompting:** Er generiert einen maßgeschneiderten Befehl für das LLM.
+2.  **Validierung:** Der Output der KI wird gegen ein **Schema (Zod)** geprüft. Wenn die KI halluziniert oder falsches JSON liefert, wird das erkannt.
+3.  **Scoring:** Kritische Kennzahlen (z.B. Impact Score) werden **im Code berechnet**, um Rechenfehler der KI auszuschließen.
 
 ---
 
@@ -121,7 +121,8 @@ Innerhalb von **`agent-core/`** finden Sie:
 Moderne "Cloud-First" Software sendet Ihre Daten an Server von Google oder Microsoft.
 Unser **Local-First** Ansatz bedeutet:
 
-- **Datenschutz:** Keine T2 Release Note verlässt je Ihren Rechner.
+- **Datenschutz (Der wichtigste Grund):** Die T2 Release Notes selbst sind öffentlich (EZB). Aber um sie zu _bewerten_, füttern wir den Agenten mit **streng vertraulichem Bank-Wissen** (Netzwerk-Architektur, Fachliche Prozesse, Schnittstellen-Beschreibungen).
+  Dieses interne Wissen darf Ihren gesicherten Bereich niemals verlassen.
 - **Kosten:** Keine API-Gebühren für jeden Aufruf.
 - **Unabhängigkeit:** Läuft auch ohne Internet (sobald Modelle geladen sind).
 

@@ -1,9 +1,9 @@
 # 🧠 ÜBERGABE: Kontext & Mindset für die nächste Sitzung
 
-**Von:** Admin & Mentor (Aktuelle Sitzung)
+**Von:** Admin & Mentor (Phase 7 Abschluss)
 **An:** Den nächsten aktiven Agenten (Rolle: **Lead Developer**)
-**Datum:** 2026-02-11
-**Status:** Phase 6 (Testing) - Infrastruktur & Basis-Tests **ABGESCHLOSSEN**
+**Datum:** 2026-02-12
+**Status:** Phase 7 (Deployment Prep) & Phase 8 (Cleanup) **ABGESCHLOSSEN**
 
 ---
 
@@ -13,33 +13,31 @@
     - Du bist der **Lead Developer**. Lies `agent-core/doc/personas/DEVELOPER.md`.
     - Dein Supervisor ist der **Admin & Mentor**. Lies `agent-core/doc/personas/ADMIN_MENTOR.md`.
 
-2.  **Projektstatus:**
-    - **Architektur:** Hybrid Node.js/Python (Feststehende Entscheidung. Siehe `agent-core/doc/adr_001_node_vs_python.md`).
-    - **Risiken & Maßnahmen:** Wir haben die Risiken analysiert (Siehe `agent-core/doc/adr_002_risk_analysis.md`) und Gegenmaßnahmen definiert (Siehe `agent-core/doc/adr_003_mitigation_strategies.md`).
-    - **Testing:** Infrastruktur steht (Jest + Integration Stress Tests).
+2.  **Projektstatus (READY FOR PRODUCTION):**
+    - **Qualität:** Das Repository ist "clean". Tests sind grün (`npm test`), Linting ist strikt (`npm run lint`).
+    - **Schutz:** `Husky` verhindert, dass kaputter Code committet wird.
+    - **Struktur:** Monorepo-Standard ist durchgesetzt (Root Configs).
+    - **Architektur:** Hybrid Node.js/Python (Feststehend).
+    - **Risiken:** Analysiert und mitigiert (Siehe `agent-core/doc/adr_003_mitigation_strategies.md`).
 
-3.  **Deine Mission (Nächste Schritte):**
-    - Wir haben ein **Sicherheitsnetz**.
-    - **Ziel 1:** Unit-Tests erweitern, falls neue Features hinzukommen.
-    - **Ziel 2:** Integrationstests überwachen (Stress-Test mit 6 PDFs läuft bereits).
-    - **Ziel 3:** Vorbereitung auf Phase 7 (Deployment / CI).
+3.  **Deine Mission (Nächste Schritte - Phase 9?):**
+    - Wir sind bereit für neue Features oder die echte Produktionseinführung.
+    - **Wartung:** Halte die Codequalität hoch. `lint` und `test` sind deine Freunde.
+    - **Release:** Wenn du ein Release machen willst, folge `agent-core/doc/guide_release.md`.
 
 ## 📂 Projektstruktur (Wo Dinge hingehören)
 
-- **Monorepo:** Wir haben eine Monorepo-Struktur eingeführt (Siehe `agent-core/doc/adr_004_monorepo_structure.md`).
-- **Root:** `.` (Git Repository Root)
-- **Agent Core Logic:** `agent-core/src/`
-- **Dokumentation:** `agent-core/doc/`
-- **Tests:** `tests/` (Neu!)
-  - `tests/unit`: Jest-Tests für die Logik.
-  - `tests/samples`: Echte PDF-Dateien zum Testen.
-- **Helfer:** `tests/samples/generate_pdf.py` (Testdaten-Generator)
+- **Monorepo Root:** `.` (Hier liegen `package.json`, `tsconfig.json`, `.gitignore`).
+- **Agent Core:** `agent-core/src/` (Der Code).
+- **Tests:** `tests/` (Unit & Integration).
+- **Docs:** `agent-core/doc/`.
 
 ## ⚠️ "Nicht anfassen" Liste
 
 - **Keine Neuschreibungen:** Refactore kein Python, solange es nicht kaputt ist.
-- **Keine Cloud:** Füge keine OpenAI API-Aufrufe hinzu.
+- **Keine Cloud:** Füge keine OpenAI API-Aufrufe hinzu (Local-First!).
+- **Kein "Quick & Dirty":** Der Linter wird dich anschreien. Hör auf ihn.
 
 ## 🏁 Wie man anfängt
 
-Sag zum Benutzer: _"Ich habe die Übergabe gelesen. Ich bin bereit, Phase 6 als Ihr Lead Developer zu beginnen."_
+Sag zum Benutzer: _"Ich habe die Übergabe gelesen. Das System ist stabil und bereit. Was ist unser nächstes Ziel?"_

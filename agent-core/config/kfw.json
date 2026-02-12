@@ -1,0 +1,31 @@
+{
+  "bankName": "KfW",
+  "components": [
+    {
+      "name": "TPH",
+      "type": "fachlich",
+      "keywords": ["Travic Payment Hub", "PPI", "Zahlungsverkehr"]
+    },
+    {
+      "name": "ESMIG",
+      "type": "technisch",
+      "keywords": ["Gateway", "Connectivity", "Network"]
+    },
+    {
+      "name": "CLM",
+      "type": "fachlich",
+      "keywords": ["Central Liquidity Management", "Limit", "Reservation"]
+    },
+    {
+      "name": "RTGS",
+      "type": "fachlich",
+      "keywords": ["Real-Time Gross Settlement", "Settlement", "Priority"]
+    },
+    {
+      "name": "DWH",
+      "type": "fachlich",
+      "keywords": ["Data Warehouse", "Reporting", "BIP"]
+    }
+  ],
+  "managedMessages": ["pacs.008", "pacs.009", "pacs.002", "camt.053", "camt.054", "pain.001"]
+}

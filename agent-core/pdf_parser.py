@@ -14,14 +14,21 @@ def parse_pdf(file_path):
         metadata = {}
         num_pages = 0
 
+        pages_content = []
         with pdfplumber.open(file_path) as pdf:
             metadata = pdf.metadata
             num_pages = len(pdf.pages)
-            for page in pdf.pages:
-                text_content += page.extract_text() or ""
-                text_content += "\n"
+            for i, page in enumerate(pdf.pages):
+                page_text = page.extract_text() or ""
+                text_content += page_text + "\n"
+                pages_content.append({"page": i + 1, "text": page_text})
 
-        result = {"text": text_content, "numpages": num_pages, "info": metadata}
+        result = {
+            "text": text_content,
+            "pages": pages_content,
+            "numpages": num_pages,
+            "info": metadata,
+        }
         print(json.dumps(result))
 
     except Exception as e:

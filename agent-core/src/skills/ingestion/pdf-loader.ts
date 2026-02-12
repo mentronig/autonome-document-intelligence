@@ -2,8 +2,14 @@ import fs from 'fs';
 import { spawn } from 'child_process';
 import path from 'path';
 
+export interface PageContent {
+  page: number;
+  text: string;
+}
+
 export interface Document {
   text: string;
+  pages: PageContent[];
   metadata: {
     source: string;
     totalPages: number;
@@ -20,7 +26,9 @@ export class PdfIngestionSkill {
 
       // Path to the python script in the project root
       // Assuming process.cwd() is the agent-core root where we run node from
-      const scriptPath = path.resolve(process.cwd(), 'pdf_parser.py');
+      // Path to the python script
+      // It's in agent-core/pdf_parser.py
+      const scriptPath = path.resolve(process.cwd(), 'agent-core', 'pdf_parser.py');
 
       // Spawn python process
       const pythonProcess = spawn('python', [scriptPath, filePath]);
@@ -49,6 +57,7 @@ export class PdfIngestionSkill {
 
           resolve({
             text: result.text,
+            pages: result.pages || [], // Ensure backward compatibility if python script is old version (though we just updated it)
             metadata: {
               source: filePath,
               totalPages: result.numpages,
