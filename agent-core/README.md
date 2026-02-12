@@ -1,9 +1,9 @@
-
 # Autonomous Document Intelligence Agent (POC)
 
 A local-first, self-learning agent designed to analyze T2 Release Notes.
 
 ## Architecture
+
 - **Runtime:** Node.js (TypeScript)
 - **Ingestion:** Python (`pdfplumber`) via parsing script
 - **Reasoning:** Local LLM (`llama3` via Ollama) + Reflexion Loop
@@ -39,6 +39,7 @@ node dist/index.js <path-to-pdf> [options]
 ```
 
 ### Options
+
 - `--mode review`: (Default) The agent asks for confirmation before critical actions (Self-Evolution).
 - `--mode maddog`: The agent acts fully autonomously (Riskier, faster).
 
@@ -49,6 +50,8 @@ node dist/index.js ../doc/samples/T2_Release_Note_Dummy.pdf --mode review
 ```
 
 ## Output
+
 Results are saved in the `memory/` directory:
+
 - `memory/logs/`: Markdown reports and JSON analysis data.
 - `memory/capsules/`: Successful usage examples for regression testing.

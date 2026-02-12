@@ -1,4 +1,3 @@
-
 # Benutzerhandbuch: Setup, Build & Deployment
 
 Dieses Handbuch führt Sie Schritt für Schritt durch den Prozess, um den **Autonomen Dokumentenanalyse-Agenten** von GitHub herunterzuladen, eine ausführbare Version zu erstellen und diese auf einem Computer (Windows) auszurollen.
@@ -10,16 +9,16 @@ Dieses Handbuch führt Sie Schritt für Schritt durch den Prozess, um den **Auto
 Bevor Sie beginnen, stellen Sie sicher, dass folgende Software auf Ihrem Computer installiert ist:
 
 1.  **Git** (Zum Herunterladen des Codes)
-    *   Download: [git-scm.com](https://git-scm.com/download/win)
-    *   Installation: Standardeinstellungen beibehalten.
+    - Download: [git-scm.com](https://git-scm.com/download/win)
+    - Installation: Standardeinstellungen beibehalten.
 2.  **Node.js** (Laufzeitumgebung für den Agenten)
-    *   Download: [nodejs.org](https://nodejs.org/) (LTS Version wählen, z.B. v20 oder v22).
+    - Download: [nodejs.org](https://nodejs.org/) (LTS Version wählen, z.B. v20 oder v22).
 3.  **Python** (Für die PDF-Verarbeitung)
-    *   Download: [python.org](https://www.python.org/downloads/)
-    *   **Wichtig:** Haken bei "Add Python to PATH" setzen!
+    - Download: [python.org](https://www.python.org/downloads/)
+    - **Wichtig:** Haken bei "Add Python to PATH" setzen!
 4.  **Ollama** (Für die künstliche Intelligenz)
-    *   Download: [ollama.com](https://ollama.com)
-    *   Installation & Setup: Nach der Installation Terminal öffnen und `ollama run llama3` eingeben, um das Modell herunterzuladen.
+    - Download: [ollama.com](https://ollama.com)
+    - Installation & Setup: Nach der Installation Terminal öffnen und `ollama run llama3` eingeben, um das Modell herunterzuladen.
 
 ---
 
@@ -62,7 +61,7 @@ Jetzt verwandeln wir den Quellcode (TypeScript) in ausführbaren JavaScript-Code
     ```powershell
     npm run build
     ```
-    *(Hinweis: Falls `npm run build` nicht definiert ist, nutzen Sie `npx tsc`)*
+    _(Hinweis: Falls `npm run build` nicht definiert ist, nutzen Sie `npx tsc`)_
 
 **Ergebnis:** Sie haben nun einen Ordner `dist`. Zusammen mit `node_modules` und `pdf_parser.py` bildet dies Ihre **ausführbare Anwendung**.
 
@@ -70,27 +69,29 @@ Jetzt verwandeln wir den Quellcode (TypeScript) in ausführbaren JavaScript-Code
 
 ## 4. Ausrollen (Deployment)
 
-Wie bringen Sie den Agenten auf einen *anderen* Computer?
+Wie bringen Sie den Agenten auf einen _anderen_ Computer?
 
 ### Option A: Quellcode-Deployment (Einfachste Methode)
+
 Dafür wiederholen Sie einfach **Schritt 1 bis 3** auf dem Zielcomputer. Das ist am sichersten, da alles frisch installiert wird.
 
 ### Option B: Manuelles Kopieren (Offline Deployment)
+
 Wenn der Zielcomputer kein Internet hat:
 
 1.  **Auf Ihrem Entwickler-PC:**
     Kopieren Sie folgende Dateien/Ordner in einen neuen Ordner `Agent_Release_v1`:
-    *   `dist/` (Der Code)
-    *   `node_modules/` (Die Bibliotheken - ACHTUNG: Muss auf gleichem OS erstellt sein!)
-    *   `.env` (Konfiguration, falls vorhanden)
-    *   `package.json`
-    *   `pdf_parser.py`
-    *   `pdf-parser-wrapper.js` (falls genutzt)
+    - `dist/` (Der Code)
+    - `node_modules/` (Die Bibliotheken - ACHTUNG: Muss auf gleichem OS erstellt sein!)
+    - `.env` (Konfiguration, falls vorhanden)
+    - `package.json`
+    - `pdf_parser.py`
+    - `pdf-parser-wrapper.js` (falls genutzt)
 
 2.  **Auf dem Ziel-PC:**
-    *   Installieren Sie **Node.js**, **Python** und **Ollama** (siehe Schritt 1).
-    *   Kopieren Sie den Ordner `Agent_Release_v1` auf den Ziel-PC.
-    *   Stellen Sie sicher, dass `pip install pdfplumber` auch dort ausgeführt wurde (oder kopieren Sie die Python-Libs, was aber komplex ist).
+    - Installieren Sie **Node.js**, **Python** und **Ollama** (siehe Schritt 1).
+    - Kopieren Sie den Ordner `Agent_Release_v1` auf den Ziel-PC.
+    - Stellen Sie sicher, dass `pip install pdfplumber` auch dort ausgeführt wurde (oder kopieren Sie die Python-Libs, was aber komplex ist).
 
 ---
 

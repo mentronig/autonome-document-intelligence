@@ -24,6 +24,11 @@ dist/
 build/
 coverage/
 
+# Memory & Logs
+memory/logs/
+memory/capsules/
+debug_output*.txt
+
 # IDE
 .vscode/
 .idea/

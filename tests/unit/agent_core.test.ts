@@ -13,64 +13,64 @@ jest.mock('../../agent-core/src/skills/evolution/capability-evolver');
 jest.mock('../../agent-core/src/skills/evolution/success-capsule');
 
 describe('AgentCore Unit Tests', () => {
-    let agent: AgentCore;
+  let agent: AgentCore;
 
-    // Type checking for mocks
-    const MockPdfLoader = PdfIngestionSkill as jest.MockedClass<typeof PdfIngestionSkill>;
-    const MockOllama = OllamaClient as jest.MockedClass<typeof OllamaClient>;
-    const MockReflexion = ReflexionEngine as jest.MockedClass<typeof ReflexionEngine>;
+  // Type checking for mocks
+  const MockPdfLoader = PdfIngestionSkill as jest.MockedClass<typeof PdfIngestionSkill>;
+  const MockOllama = OllamaClient as jest.MockedClass<typeof OllamaClient>;
+  const MockReflexion = ReflexionEngine as jest.MockedClass<typeof ReflexionEngine>;
 
-    beforeEach(() => {
-        // Reset mocks before each test
-        jest.clearAllMocks();
+  beforeEach(() => {
+    // Reset mocks before each test
+    jest.clearAllMocks();
 
-        // Setup default mock behaviors
-        MockOllama.prototype.isConnected.mockResolvedValue(true);
-        MockPdfLoader.prototype.loadPdf.mockResolvedValue({
-            text: 'Sample PDF Text Content',
-            metadata: {
-                totalPages: 1,
-                source: 'dummy.pdf'
-            }
-        });
-        MockReflexion.prototype.run.mockResolvedValue({
-            summary: 'Mocked Summary',
-            pbis: [],
-            crs: []
-        });
-
-        agent = new AgentCore({
-            mode: OperationalMode.REVIEW
-        });
+    // Setup default mock behaviors
+    MockOllama.prototype.isConnected.mockResolvedValue(true);
+    MockPdfLoader.prototype.loadPdf.mockResolvedValue({
+      text: 'Sample PDF Text Content',
+      metadata: {
+        totalPages: 1,
+        source: 'dummy.pdf',
+      },
+    });
+    MockReflexion.prototype.run.mockResolvedValue({
+      summary: 'Mocked Summary',
+      pbis: [],
+      crs: [],
     });
 
-    test('should instantiate correctly', () => {
-        expect(agent).toBeDefined();
-        // Verify dependencies were instantiated
-        expect(MockPdfLoader).toHaveBeenCalledTimes(1);
-        expect(MockOllama).toHaveBeenCalledTimes(1);
+    agent = new AgentCore({
+      mode: OperationalMode.REVIEW,
     });
+  });
 
-    test('should run basic ingestion flow', async () => {
-        await agent.run('dummy.pdf');
+  test('should instantiate correctly', () => {
+    expect(agent).toBeDefined();
+    // Verify dependencies were instantiated
+    expect(MockPdfLoader).toHaveBeenCalledTimes(1);
+    expect(MockOllama).toHaveBeenCalledTimes(1);
+  });
 
-        // Check if loadPdf was called
-        const mockIngestorInstance = MockPdfLoader.mock.instances[0];
-        expect(mockIngestorInstance.loadPdf).toHaveBeenCalledWith('dummy.pdf');
-    });
+  test('should run basic ingestion flow', async () => {
+    await agent.run('dummy.pdf');
 
-    test('should abort if Ollama is disconnected', async () => {
-        // Setup: Ollama is disconnected
-        MockOllama.prototype.isConnected.mockResolvedValue(false);
+    // Check if loadPdf was called
+    const mockIngestorInstance = MockPdfLoader.mock.instances[0];
+    expect(mockIngestorInstance.loadPdf).toHaveBeenCalledWith('dummy.pdf');
+  });
 
-        // Capture console.warn to verify output (optional, good practice)
-        const spyWarn = jest.spyOn(console, 'warn').mockImplementation(() => { });
+  test('should abort if Ollama is disconnected', async () => {
+    // Setup: Ollama is disconnected
+    MockOllama.prototype.isConnected.mockResolvedValue(false);
 
-        await agent.run('dummy.pdf');
+    // Capture console.warn to verify output (optional, good practice)
+    const spyWarn = jest.spyOn(console, 'warn').mockImplementation(() => {});
 
-        expect(spyWarn).toHaveBeenCalledWith(expect.stringContaining('Ollama NOT connected'));
+    await agent.run('dummy.pdf');
 
-        // Restore spy
-        spyWarn.mockRestore();
-    });
+    expect(spyWarn).toHaveBeenCalledWith(expect.stringContaining('Ollama NOT connected'));
+
+    // Restore spy
+    spyWarn.mockRestore();
+  });
 });

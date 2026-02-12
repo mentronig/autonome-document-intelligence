@@ -6,13 +6,13 @@ Ein autonomer KI-Agent zur Analyse von komplexen Bankdokumenten (EZB Change Requ
 
 Dieses Repository ist als **Monorepo** organisiert:
 
-*   📂 **`agent-core/`**: Das "Gehirn" des Agenten.
-    *   Hier liegt der gesamte Quellcode (TypeScript & Python).
-    *   Hier starten alle Befehle (`npm start`, `npm test`).
-*   📂 **`tests/`**: Qualitätssicherung.
-    *   `tests/samples/`: Echte PDF-Dokumente für Integrationstests.
-    *   `tests/integration/`: End-to-End Tests.
-    *   `tests/unit/`: Tests für die interne Logik.
+- 📂 **`agent-core/`**: Das "Gehirn" des Agenten.
+  - Hier liegt der gesamte Quellcode (TypeScript & Python).
+  - Hier starten alle Befehle (`npm start`, `npm test`).
+- 📂 **`tests/`**: Qualitätssicherung.
+  - `tests/samples/`: Echte PDF-Dokumente für Integrationstests.
+  - `tests/integration/`: End-to-End Tests.
+  - `tests/unit/`: Tests für die interne Logik.
 
 ## Schnellstart
 
@@ -35,5 +35,6 @@ npm start -- "C:\Pfad\zu\deinem.pdf"
 ## Dokumentation
 
 Detaillierte Anleitungen findest du im Ordner `agent-core/doc/`:
-*   [Einsteiger-Guide zum Testen](agent-core/doc/guide_agent_testing_basics.md)
-*   [Architektur-Entscheidungen (ADRs)](agent-core/doc/)
+
+- [Einsteiger-Guide zum Testen](agent-core/doc/guide_agent_testing_basics.md)
+- [Architektur-Entscheidungen (ADRs)](agent-core/doc/)

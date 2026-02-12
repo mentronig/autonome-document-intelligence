@@ -1,20 +1,23 @@
-
 import { OllamaClient } from '../../infrastructure/ollama-client';
 import { SuccessCapsuleManager } from './success-capsule';
 
 export class CapabilityEvolver {
-    private ollama: OllamaClient;
-    private capsules: SuccessCapsuleManager;
+  private ollama: OllamaClient;
+  private capsules: SuccessCapsuleManager;
 
-    constructor(ollama: OllamaClient, capsules: SuccessCapsuleManager) {
-        this.ollama = ollama;
-        this.capsules = capsules;
-    }
+  constructor(ollama: OllamaClient, capsules: SuccessCapsuleManager) {
+    this.ollama = ollama;
+    this.capsules = capsules;
+  }
 
-    async evolveRule(failedInput: string, critique: string, currentCode: string): Promise<string | null> {
-        console.log("🧬 Initiating Evolution Sequence...");
+  async evolveRule(
+    failedInput: string,
+    critique: string,
+    currentCode: string,
+  ): Promise<string | null> {
+    console.log('🧬 Initiating Evolution Sequence...');
 
-        const prompt = `
+    const prompt = `
 You are an expert TypeScript developer and AI Architect.
 The current code failed to process an input correctly.
 We need to evolve the logic to handle this new case WITHOUT breaking existing cases.
@@ -40,33 +43,32 @@ RESPONSE FORMAT:
 \`\`\`
 `;
 
-        try {
-            const response = await this.ollama.generateCompletion(prompt);
-            const codeMatch = response.match(/```typescript([\s\S]*?)```/);
+    try {
+      const response = await this.ollama.generateCompletion(prompt);
+      const codeMatch = response.match(/```typescript([\s\S]*?)```/);
 
-            if (codeMatch && codeMatch[1]) {
-                const proposedCode = codeMatch[1].trim();
-                console.log("🤖 AI Proposed Mutation:\n", proposedCode);
+      if (codeMatch && codeMatch[1]) {
+        const proposedCode = codeMatch[1].trim();
+        console.log('🤖 AI Proposed Mutation:\n', proposedCode);
 
-                // In a real system, we would:
-                // 1. Hot-reload or compile this code.
-                // 2. Run SuccessCapsuleManager.validate() to ensure no regressions.
-                // 3. Commit if green.
+        // In a real system, we would:
+        // 1. Hot-reload or compile this code.
+        // 2. Run SuccessCapsuleManager.validate() to ensure no regressions.
+        // 3. Commit if green.
 
-                // For this POC, we just simulate the proposal and basic validation log.
-                console.log("Processing regression tests...");
-                // const regressionResult = await this.capsules.validate(mockProcessor); // Placeholder
-                console.log("Regression Testing: PASSED (Simulated)");
+        // For this POC, we just simulate the proposal and basic validation log.
+        console.log('Processing regression tests...');
+        // const regressionResult = await this.capsules.validate(mockProcessor); // Placeholder
+        console.log('Regression Testing: PASSED (Simulated)');
 
-                return proposedCode;
-            }
+        return proposedCode;
+      }
 
-            console.warn("Evolution failed: No code block returned.");
-            return null;
-
-        } catch (error) {
-            console.error("Evolution error:", error);
-            return null;
-        }
+      console.warn('Evolution failed: No code block returned.');
+      return null;
+    } catch (error) {
+      console.error('Evolution error:', error);
+      return null;
     }
+  }
 }
