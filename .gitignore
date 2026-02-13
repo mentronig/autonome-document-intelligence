@@ -36,5 +36,13 @@ debug_output*.txt
 .idea/
 
 # Testing
+# Testing
 tests/samples/*.pdf
 !tests/samples/generate_pdf.py
+*.test.js.map
+*.test.ts.map
+
+# System
+thumbs.db
+desktop.ini
+

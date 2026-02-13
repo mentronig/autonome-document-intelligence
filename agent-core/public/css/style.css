@@ -1,0 +1,84 @@
+:root {
+    --glass-bg: rgba(255, 255, 255, 0.1);
+    --glass-border: rgba(255, 255, 255, 0.2);
+    --glass-blur: 10px;
+    --primary-glow: rgba(0, 255, 255, 0.5);
+    --text-color: #fff;
+    --bg-color: #0f172a;
+}
+
+body {
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    overflow: hidden; /* Prevent scroll on main container */
+}
+
+.glass-container {
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    width: 80%;
+    max-width: 800px;
+    text-align: center;
+}
+
+header h1 {
+    font-size: 2.5rem;
+    text-shadow: 0 0 10px var(--primary-glow);
+    margin-bottom: 0.5rem;
+}
+
+.glass-panel {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-top: 20px;
+    transition: transform 0.3s ease;
+}
+
+.glass-panel:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0 15px var(--primary-glow);
+}
+
+#drop-zone {
+    border: 2px dashed var(--glass-border);
+    padding: 40px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+#drop-zone:hover, #drop-zone.drag-over {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--primary-glow);
+}
+
+.hidden {
+    display: none;
+}
+
+#status-bar {
+    width: 100%;
+    height: 10px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
+    margin: 10px 0;
+    overflow: hidden;
+}
+
+#progress {
+    width: 0%;
+    height: 100%;
+    background: var(--primary-glow);
+    transition: width 0.5s ease;
+}

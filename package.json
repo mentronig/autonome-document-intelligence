@@ -3,6 +3,7 @@
     "clean": "rimraf dist coverage",
     "build": "tsc",
     "start": "ts-node agent-core/src/index.ts",
+    "start:web": "ts-node agent-core/src/interface/server.ts",
     "test": "jest",
     "lint": "eslint .",
     "format": "prettier --write .",
@@ -22,7 +23,10 @@
     ]
   },
   "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
     "@types/jest": "^30.0.0",
+    "@types/multer": "^2.0.0",
     "@types/node": "^25.2.3",
     "@typescript-eslint/eslint-plugin": "^8.55.0",
     "@typescript-eslint/parser": "^8.55.0",
@@ -43,7 +47,10 @@
   },
   "dependencies": {
     "chromadb": "^3.3.0",
+    "cors": "^2.8.6",
     "dotenv": "^17.2.4",
+    "express": "^5.2.1",
+    "multer": "^2.0.2",
     "ollama": "^0.6.3",
     "zod": "^4.3.6"
   }
