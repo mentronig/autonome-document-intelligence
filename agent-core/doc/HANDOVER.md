@@ -1,38 +1,70 @@
-# Handover - Phase 13 Optimizations Completed ✅ -> Phase 14 Pending ⏸️
+# 🚀 Autonome Document Intelligence - Handover Protocol
 
-## Status Quo (14.02.2026)
+**Status:** Phase 13 COMPLETED ✅
+**Next Phase:** Phase 14: Quality Benchmarking (Das Duell) ⚔️
+**Date:** 2026-02-14
 
-Wir haben **Phase 13 (Optimierung)** teilweise abgeschlossen:
-1.  **Sprechende Profil-Namen:** `KfW` statt `kfw.json` im UI.
-2.  **Real-Time Progress:** Live-Feedback während der Analyse (via SSE).
-3.  **Export:** Copy & Download Buttons für Berichte.
+---
 
-### Was ist neu?
+## 🏁 Current State (Where we are)
 
-1.  **Web UI (The Face):** Ein lokales Frontend im "Quantum Glass" Design (`agent-core/public/`).
-2.  **Express Server:** Backend-Server (`agent-core/src/interface/server.ts`), der statische Files serviert und API-Endpunkte bereitstellt.
-3.  **Backend Refactoring:** `AgentCore` akzeptiert nun injizierte Configs.
-4.  **Reporting:** 3-Phasen-Berichte (BA, Tech, Mgmt) sind implementiert und verifiziert.
+We have successfully completed **Phase 13**, polishing the application to a professional standard. The system is stable, aesthetically pleasing, and pushed to GitHub.
 
-### Neue Features (Phase 13)
-- **Live CR Logging:** Echtzeit-Liste der gefundenen Change Requests während der Analyse.
-- **Report Actions:** Copy & Download.
-- **UI Optimierungen:** 
-  - Status-Anzeige (Dateiname).
-  - Breiteres Layout (1200px) & Textumbruch.
-  - Scroll-Fix für kleine Bildschirme.
-  - **New Analysis Button:** Einfacher Reset für neue Analysen.
-  - **Mehrsprachigkeit (DE/EN):** Sprachwahl in Navigation mit Persistenz. Implementiert über externe JSON-Dateien (`/locales/`).
+### key Achievements (Phase 13)
 
-### Nächster Schritt: Phase 14 (The Strategist) ♟️
+1.  **Multilingual GUI (i18n):**
+    - Innovative "Quantum Glass" Language Selector (DE/EN).
+    - Texts externalized to `locales/*.json`.
+    - Auto-detection of user preference.
+2.  **Live Progress & feedback:**
+    - Server-Sent Events (SSE) implemented for real-time analysis logs.
+    - "Live CR Logging" shows results immediately as they are found.
+3.  **Stability & Cleanup:**
+    - Global Error Handling preventing server crashes.
+    - Robust JSON Parsing for AI responses.
+    - `.gitignore` consolidated, repo cleaned.
+    - **All changes pushed to GitHub** (`origin/main`).
 
-**Status: READY**
+---
 
-Der User möchte nun die strategische Ausrichtung (Produkt-Vision) klären.
+## 🗺️ The New Roadmap (Where we are going)
 
-**Start-Punkt für den nächsten Agenten:**
+The user has approved a _strategic shift_ in the roadmap to focus on **Quality** before **Complexity**.
 
-1.  **Planung:** Erstelle einen `implementation_plan.md` für Phase 14.
-2.  **Thema:** Persona-Entwicklung, Roadmap, Vision.
+### -> Phase 14: Quality Benchmarking (Das Duell) ⚔️
 
-Viel Erfolg! 🤖✨
+- **Goal:** Prove that our Local Agent (Llama3) can compete with (or beat) ChatGPT 5.1.
+- **Action:** Parallel analysis of 3 Release Notes.
+- **Metric:** Accuracy of CR detection, false positives, detail level.
+
+### -> Phase 14.5: Deep Context Injection 🧠
+
+- **Goal:** Teach the agent "Bank Knowledge" (RAG Light) to outperform generic ChatGPT.
+
+### -> Phase 15: The Context Architect 🧙‍♂️
+
+- **Goal:** Persist this configuration (what we originally planned for Phase 14).
+
+---
+
+## 🛠️ Instructions for the Next Agent
+
+**Your Mission:** execute **Phase 14**.
+
+1.  **Ask the User for the "Test Set"**:
+    - We need 3 PDF Release Notes (Low/Medium/High complexity).
+2.  **Clarify the "Opponent"**:
+    - Will the user run ChatGPT manually? Or should we simulate/mock the "Cloud Competitor" based on heuristics?
+3.  **Execute & Compare**:
+    - Run the local agent on the files.
+    - Gather the "Cloud" results.
+    - Create the **Comparison Matrix** (`agent-core/doc/benchmarks/phase_14_comparison.md`).
+
+**Technical Note:**
+
+- The codebase is clean. No pending lint errors.
+- Start logic is in `agent-core/src/engine/agent-core.ts`.
+- Skill logic is in `agent-core/src/skills/library/t2-impact-skill.ts`.
+- **Do not break the build!** (Husky hooks are strict).
+
+Good luck, Context Architect! 🫡
