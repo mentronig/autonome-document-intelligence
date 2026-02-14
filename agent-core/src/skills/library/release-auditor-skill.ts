@@ -35,11 +35,11 @@ export class ReleaseAuditorSkill implements ISkill<void, ReleaseAuditorResult> {
   description =
     'Analyzes T2 Release notes for Production Problems (PBIs) and Change Requests (CRs).';
 
-  configure(_config: unknown): void {
+  configure(): void {
     // No config needed for existing logic yet
   }
 
-  generatePrompt(chunkText: string, _context?: Record<string, unknown>): string {
+  generatePrompt(chunkText: string): string {
     return `
 You are an expert T2 Release Note Analyst.
 Your task is to extract "Production Problems" (PBIs) and "Change Requests" (CRs) from the provided text.

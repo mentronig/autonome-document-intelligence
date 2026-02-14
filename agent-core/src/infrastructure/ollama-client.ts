@@ -34,11 +34,12 @@ export class OllamaClient {
     }
   }
 
-  async generateCompletion(prompt: string): Promise<string> {
+  async generateCompletion(prompt: string, options?: { format?: string }): Promise<string> {
     return this.retry(async () => {
       const response = await this.ollama.generate({
         model: this.model,
         prompt: prompt,
+        format: options?.format,
         stream: false,
       });
       return response.response;
@@ -57,9 +58,14 @@ export class OllamaClient {
 
   async isConnected(): Promise<boolean> {
     try {
-      await this.ollama.list();
+      // Timeout after 2 seconds
+      const timeout = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('Ollama connection timed out')), 2000),
+      );
+      await Promise.race([this.ollama.list(), timeout]);
       return true;
-    } catch {
+    } catch (error) {
+      console.warn('Ollama connection check failed:', error);
       return false;
     }
   }

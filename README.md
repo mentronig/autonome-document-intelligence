@@ -32,9 +32,18 @@ npm test
 npm start -- "C:\Pfad\zu\deinem.pdf"
 ```
 
+## Features
+
+- **Autonome Analyse:** Liest PDFs, chunked sie intelligent und extrahiert Impact-Analysen.
+- **Multilingual GUI:** Umschaltbar zwischen Deutsch und Englisch.
+- **Config Editor:** Bearbeiten von Bank-Profilen direkt im Browser.
+- **Live-Logs:** Echtzeit-Fortschrittsanzeige via Server-Sent Events (SSE).
+- **Export:** Ergebnisse als Markdown/JSON herunterladen oder in die Zwischenablage kopieren.
+
 ## Dokumentation
 
 Detaillierte Anleitungen findest du im Ordner `agent-core/doc/`:
 
 - [Einsteiger-Guide zum Testen](agent-core/doc/guide_agent_testing_basics.md)
 - [Architektur-Entscheidungen (ADRs)](agent-core/doc/)
+- [Handover Dokumentation](agent-core/doc/HANDOVER.md)

@@ -13,7 +13,7 @@ export interface Document {
   metadata: {
     source: string;
     totalPages: number;
-    info?: any;
+    info?: unknown;
   };
 }
 
@@ -36,11 +36,11 @@ export class PdfIngestionSkill {
       let dataString = '';
       let errorString = '';
 
-      pythonProcess.stdout.on('data', (data) => {
+      pythonProcess.stdout.on('data', (data: Buffer) => {
         dataString += data.toString();
       });
 
-      pythonProcess.stderr.on('data', (data) => {
+      pythonProcess.stderr.on('data', (data: Buffer) => {
         errorString += data.toString();
       });
 

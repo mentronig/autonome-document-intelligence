@@ -27,7 +27,7 @@ export class ChromaDbClient {
     }
   }
 
-  async addDocument(id: string, text: string, metadata: any, embedding: number[]) {
+  async addDocument(id: string, text: string, metadata: Record<string, string | number | boolean>, embedding: number[]) {
     if (!this.collection) await this.init();
 
     await this.collection!.add({

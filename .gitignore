@@ -25,11 +25,20 @@ build/
 coverage/
 
 # Memory & Logs
-memory/logs/
-memory/capsules/
-memory/*.json
-memory/*.md
+memory/
+agent-core/memory/logs/
+agent-core/memory/capsules/
+agent-core/memory/*.json
+agent-core/memory/*.md
+agent-core/logs/*.log
+*.log
+analysis_temp_*.json
+summary_temp_*.md
 debug_output*.txt
+temp_*.pdf
+debug_output*.txt
+temp_*.pdf
+agent-core/src/interface/temp_*.pdf
 
 # IDE
 .vscode/

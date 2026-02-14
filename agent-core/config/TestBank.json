@@ -1,0 +1,16 @@
+{
+  "bankName": "TestBank",
+  "managedMessages": [
+    "pacs.008",
+    "camt.053"
+  ],
+  "components": [
+    {
+      "name": "CoreSystem",
+      "type": "technisch",
+      "keywords": [
+        "Core"
+      ]
+    }
+  ]
+}

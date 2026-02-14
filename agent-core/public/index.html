@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Autonome Document Intelligence</title>
     <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
+
 <body>
     <div class="glass-container">
         <header>
@@ -13,29 +16,103 @@
             <p>Autonomous T2 Release Analysis</p>
         </header>
 
+        <nav class="glass-nav">
+            <button id="nav-analyze" class="nav-btn active" data-i18n="nav_analyze">Analyze</button>
+            <button id="nav-config" class="nav-btn" data-i18n="nav_config">Configuration</button>
+            <select id="lang-select" class="lang-select" aria-label="Language Selection">
+                <option value="en">EN</option>
+                <option value="de">DE</option>
+            </select>
+        </nav>
+
         <main>
-            <section id="upload-section" class="glass-panel">
-                <h2>Upload Document</h2>
-                <div id="drop-zone">
-                    <p>Drag & Drop PDF here or click to select</p>
-                    <input type="file" id="file-input" accept=".pdf" hidden>
-                </div>
-            </section>
+            <!-- ANALYZE VIEW -->
+            <div id="view-analyze">
+                <section id="upload-section" class="glass-panel">
+                    <h2 data-i18n="upload_title">Upload Release Note (PDF)</h2>
+                    <div class="config-selection">
+                        <label for="analyze-config-select" data-i18n="bank_profile_label">For Bank Profile:</label>
+                        <select id="analyze-config-select">
+                            <option value="" data-i18n="select_profile_default">-- Select Profile --</option>
+                        </select>
+                    </div>
+                    <div id="drop-zone">
+                        <p data-i18n="drop_zone_text">Drag & Drop PDF here or click to select</p>
+                        <input type="file" id="file-input" accept=".pdf" hidden>
+                    </div>
+                </section>
 
-            <section id="status-section" class="glass-panel hidden">
-                <h2>Agent Status</h2>
-                <div id="status-bar">
-                    <div id="progress"></div>
-                </div>
-                <p id="status-text">Ready</p>
-            </section>
+                <section id="status-section" class="glass-panel hidden">
+                    <h2 data-i18n="status_title">Agent Status</h2>
+                    <p id="status-filename" class="subtitle"></p>
+                    <div id="status-bar">
+                        <div id="progress"></div>
+                    </div>
+                    <p id="status-text" data-i18n="status_ready">Ready</p>
+                    <ul id="live-cr-list" class="live-log"></ul>
+                </section>
 
-            <section id="result-section" class="glass-panel hidden">
-                <h2>Analysis Report</h2>
-                <div id="report-content"></div>
-            </section>
+                <section id="result-section" class="glass-panel hidden">
+                    <h2 data-i18n="report_title">Analysis Report</h2>
+                    <p id="analyzed-filename" class="subtitle"></p>
+                    <div class="tabs">
+                        <button class="tab-btn active" data-tab="mgmt" data-i18n="tab_mgmt">Management</button>
+                        <button class="tab-btn" data-tab="ba" data-i18n="tab_ba">Business Analyst</button>
+                        <button class="tab-btn" data-tab="tech" data-i18n="tab_tech">Technical</button>
+                    </div>
+                    <div class="report-actions">
+                        <button id="btn-new-analysis" class="action-btn primary small" data-i18n="btn_new_analysis">🔄
+                            New Analysis</button>
+                        <button id="btn-copy-report" class="action-btn small" data-i18n="btn_copy">📋 Copy to
+                            Clipboard</button>
+                        <button id="btn-download-report" class="action-btn small" data-i18n="btn_download">💾 Download
+                            Report</button>
+                    </div>
+                    <div id="report-viewer" class="markdown-content">
+                        <!-- Content injected here -->
+                    </div>
+                </section>
+            </div>
+
+            <!-- CONFIG VIEW -->
+            <div id="view-config" class="hidden">
+                <section class="glass-panel">
+                    <h2 data-i18n="config_title">Bank Profile Editor</h2>
+                    <div class="config-controls">
+                        <select id="config-select">
+                            <option value="" data-i18n="select_profile_loading">Loading profiles...</option>
+                        </select>
+                        <button id="btn-load-config" class="action-btn" data-i18n="btn_load">Load</button>
+                        <button id="btn-save-config" class="action-btn primary" data-i18n="btn_save">Save</button>
+                    </div>
+
+                    <form id="config-form">
+                        <div class="form-group">
+                            <label data-i18n="bank_name_label">Bank Name</label>
+                            <input type="text" id="conf-bankName" placeholder="e.g. KfW">
+                        </div>
+
+                        <div class="form-group">
+                            <label data-i18n="managed_msgs_label">Managed Messages (ISO 20022)</label>
+                            <textarea id="conf-messages" placeholder="pacs.008, camt.053, ..."></textarea>
+                            <small data-i18n="comma_separated">Comma separated</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label data-i18n="components_label">Components</label>
+                            <div id="components-list">
+                                <!-- Dynamic Component Inputs -->
+                            </div>
+                            <button type="button" id="btn-add-component" class="action-btn small"
+                                data-i18n="btn_add_comp">+ Add
+                                Component</button>
+                        </div>
+                    </form>
+                </section>
+            </div>
         </main>
     </div>
     <script src="js/app.js"></script>
 </body>
+
 </html>

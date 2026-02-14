@@ -8,6 +8,7 @@ export type T2ComponentType = 'fachlich' | 'technisch';
 export interface T2Component {
   name: string;
   type: T2ComponentType;
+  description?: string; // Added for context injection
   keywords: string[]; // Keywords to detect relevance in text
 }
 
@@ -42,6 +43,9 @@ export interface T2ChangeRequest {
   description: string; // Business-friendly description
   impact_category: 'Critical' | 'High' | 'Medium' | 'Low' | 'None';
   scores: ImpactScores;
+  // Reasoning & Detailed Analysis
+  technical_analysis?: string; // Tech-Speech: Schema details, XPaths
+  ba_reasoning?: string; // BA-Speech: Why this score?
   breaking_change: boolean;
   affected_processes: string[];
   adjustments: SystemAdjustment[];
@@ -49,7 +53,7 @@ export interface T2ChangeRequest {
 
 // The final aggregated report structure
 export interface T2ImpactAnalysisResult {
-  executive_summary: string;
+  // Raw Data
   crs: T2ChangeRequest[];
   stats: {
     total_crs: number;
@@ -58,6 +62,10 @@ export interface T2ImpactAnalysisResult {
     medium: number;
     low: number;
   };
+  // Generated Reports (Markdown)
+  baReport: string;
+  techReport: string;
+  mgmtReport: string;
 }
 
 // --- ZOD SCHEMAS (for LLM Validation) --------------------------------------
@@ -72,7 +80,19 @@ export const ImpactScoresSchema = z.object({
 export const SystemAdjustmentSchema = z.object({
   system: z.string(),
   description: z.string(),
-  effort: z.enum(['Low', 'Medium', 'High']),
+  effort: z.union([
+    z.enum(['Low', 'Medium', 'High']),
+    z.enum(['Niedrig', 'Mittel', 'Hoch']).transform((val) => {
+      switch (val) {
+        case 'Niedrig':
+          return 'Low';
+        case 'Mittel':
+          return 'Medium';
+        case 'Hoch':
+          return 'High';
+      }
+    }),
+  ]),
 });
 
 export const T2ChangeRequestSchema = z.object({
@@ -81,6 +101,8 @@ export const T2ChangeRequestSchema = z.object({
   description: z.string(),
   // Note: We don't ask LLM for 'impact_category' directly, we calculate it!
   scores: ImpactScoresSchema,
+  technical_analysis: z.string().optional(),
+  ba_reasoning: z.string().optional(),
   breaking_change: z.boolean(),
   affected_processes: z.array(z.string()),
   adjustments: z.array(SystemAdjustmentSchema),

@@ -26,6 +26,14 @@ module.exports = tseslint.config(
     },
   },
   {
+    files: ['agent-core/public/**/*.js'],
+    languageOptions: {
+      globals: {
+        ...globals.browser,
+      },
+    },
+  },
+  {
     files: ['**/*.js'],
     rules: {
       '@typescript-eslint/no-require-imports': 'off',

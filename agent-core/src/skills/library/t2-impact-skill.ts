@@ -26,48 +26,67 @@ export class T2ImpactSkill implements ISkill<T2Config, T2ChunkResult, T2ImpactAn
       throw new Error('T2ImpactSkill not configured! Call configure() first.');
     }
 
-    const systemList = this.config.components.map((c) => `${c.name} (${c.type})`).join(', ');
-    const messageList = this.config.managedMessages.join(', ');
+    // Context Injection from enriched kfw.json
+    const systemContext = this.config.components
+      .map((c) => `- **${c.name} (${c.type})**: ${c.description || 'No description'}`)
+      .join('\n');
+    const messageContext = this.config.managedMessages.join('\n- ');
 
     return `
-ROLE: Senior Business Analyst & Technical Architect (T2/ISO20022 Expert).
-TASK: Analyze the provided text chunk for impacts on OUR SPECIFIC INFRASTRUCTURE.
+# ROLE: Senior T2 Analyst (BA & Tech Expert)
+You are the "Quantum Intelligence" engine for ${this.config.bankName}. Your job is to analyze T2 Release Notes and identify impacts on OUR specific infrastructure.
 
-CONTEXT (${this.config.bankName}):
-- Systems: ${systemList}
-- Relevant Messages: ${messageList}
+# CONTEXT: ${this.config.bankName} Infrastructure
+${systemContext}
 
-INSTRUCTIONS:
-1. Identify Change Requests (CRs) described in the text.
-2. For each CR, analyze the impact on our systems based on 4 criteria (0-3 score):
-   - Structure Change (0=None, 3=Breaking/Removal)
-   - Payment Flow Impact (0=None, 3=Core Flow Blocked)
-   - Technical Impact (0=None, 3=Multiple Systems need Update)
-   - Regulatory Impact (0=None, 3=Mandatory)
-3. Identify which specific systems (from the list above) need adjustment.
-4. Assess if it is a BREAKING CHANGE.
+# CONTEXT: Managed ISO20022 Messages
+- ${messageContext}
 
-CONSTRAINT:
-- Do NOT hallucinate systems not in the list.
-- If a field is removed, Structure Change MUST be 3.
+# TASK
+Analyze the provided text for Change Requests (CRs). For each CR found, you must generate a structured analysis containing:
+1. **Scores:** Evaluate impact on Structure (40%), Payment Flow (25%), Tech (20%), Regulatory (15%).
+2. **BA Analysis:** Business-friendly explanation of WHY it is relevant (or not).
+3. **Tech Analysis:** Technical details (XPaths, Schema changes) for engineers.
+4. **Adjustments:** Specific systems from our CONTEXT that need changes.
 
-OUTPUT FORMAT (JSON):
+# IMPACT SCORING RULES (0-3)
+- **Structure:** 3=Breaking/Removal, 2=New Optional, 1=Doc Update, 0=None.
+- **Payment Flow:** 3=Core Flow (pacs.008/009) blocked, 2=Reporting, 0=None.
+- **Technical:** 3=Multiple Systems (TPH+Archive), 2=One Complex System, 1=Config only.
+- **Regulatory:** 3=Mandatory (ECB), 0=Optional.
+
+# STYLE GUIDELINES (Strict!)
+- **LANGUAGE: GERMAN (DEUTSCH)**
+  - All output text (descriptions, reasoning, analysis) MUST be in GERMAN.
+  - **CRITICAL:** DO NOT TRANSLATE JSON KEYS! Check that keys like "structure_change" remain exactly as shown.
+  - Do NOT translate technical terms (e.g., "pacs.008", "XPath", "XML Tag"), but explain them in German.
+- **BA_REASONING:**
+  - ✅ Use business terms ("Kundenüberweisung" instead of just "pacs.008").
+  - ✅ Specific impacts ("TPH Settlement blockiert").
+  - ❌ NO XPaths, NO Schema details, NO "minOccurs".
+- **TECHNICAL_ANALYSIS:**
+  - ✅ Use XPaths, Schema details, "minOccurs".
+  - ✅ Mention specific XML tags.
+
+# OUTPUT FORMAT (JSON)
 {
   "found_crs": [
     {
       "id": "T2-xxxx",
-      "title": "...",
-      "description": "Business concise description...",
+      "title": "Titel auf Deutsch",
+      "description": "Kurze Zusammenfassung auf Deutsch...",
       "scores": { "structure_change": 0-3, "payment_flow_impact": 0-3, "technical_impact": 0-3, "regulatory_impact": 0-3 },
+      "ba_reasoning": "Geschäftliche Begründung auf Deutsch (Siehe STYLE GUIDELINES)",
+      "technical_analysis": "Technische Analyse auf Deutsch (Siehe STYLE GUIDELINES)",
       "breaking_change": true/false,
-      "affected_processes": ["..."],
-      "adjustments": [ { "system": "TPH", "description": "...", "effort": "Medium" } ]
+      "affected_processes": ["RTGS", "CLM", ...],
+      "adjustments": [ { "system": "TPH", "description": "Beschreibung der Anpassung auf Deutsch...", "effort": "Medium" } ]
     }
   ],
-  "summary_fragment": "..."
+  "summary_fragment": "Optionaler Text für Management Summary auf Deutsch..."
 }
 
-TEXT TO ANALYZE:
+# TEXT TO ANALYZE
 ${chunkText}
 `;
   }
@@ -78,12 +97,9 @@ ${chunkText}
 
   mergeResults(chunkResults: T2ChunkResult[]): T2ImpactAnalysisResult {
     const crMap = new Map<string, T2ChangeRequest>();
-    let fullSummary = '';
+
 
     for (const chunk of chunkResults) {
-      if (chunk.summary_fragment) {
-        fullSummary += chunk.summary_fragment + '\n';
-      }
 
       for (const cr of chunk.found_crs) {
         // Simple deduplication: Last write wins for now, or merge?
@@ -130,69 +146,143 @@ ${chunkText}
     const severityOrder = { Critical: 4, High: 3, Medium: 2, Low: 1, None: 0 };
     allCrs.sort((a, b) => severityOrder[b.impact_category] - severityOrder[a.impact_category]);
 
+    const stats = {
+      total_crs: allCrs.length,
+      critical: allCrs.filter((c) => c.impact_category === 'Critical').length,
+      high: allCrs.filter((c) => c.impact_category === 'High').length,
+      medium: allCrs.filter((c) => c.impact_category === 'Medium').length,
+      low: allCrs.filter((c) => c.impact_category === 'Low').length,
+    };
+
+    const baReport = this.generateBAReport(allCrs);
+    const techReport = this.generateTechReport(allCrs);
+    const mgmtReport = this.generateMgmtReport(allCrs, stats);
+
     return {
-      executive_summary: fullSummary.trim(),
       crs: allCrs,
-      stats: {
-        total_crs: allCrs.length,
-        critical: allCrs.filter((c) => c.impact_category === 'Critical').length,
-        high: allCrs.filter((c) => c.impact_category === 'High').length,
-        medium: allCrs.filter((c) => c.impact_category === 'Medium').length,
-        low: allCrs.filter((c) => c.impact_category === 'Low').length,
-      },
+      stats,
+      baReport,
+      techReport,
+      mgmtReport,
     };
   }
 
   formatReport(result: T2ImpactAnalysisResult): string {
-    return `
-# T2 Analysis Report (Bank Context: ${this.config?.bankName || 'Unknown'})
+    return `${result.mgmtReport}\n\n---\n\n${result.baReport}\n\n---\n\n${result.techReport}`;
+  }
 
-## Executive Summary
-${result.executive_summary}
+  private generateBAReport(crs: T2ChangeRequest[]): string {
+    const header = `# PHASE 1: BA-REPORT MIT RELEVANZ-SCORING\n\n## Relevanzmodell (gewichtet)\nNachrichtenstruktur (0.40) · Zahlungsabwicklung & Liquidität (0.25) · Technische Umsetzung (0.20) · Regulatorische Anforderungen (0.15)\nThresholds: ≥1.80 = Critical · 1.00–1.79 = High · 0.50–0.99 = Medium · <0.50 = Not Relevant\n\n## CR-Übersicht (Relevanz-Tabelle)\n| CR | Titel | Score | Kategorie | Hauptgrund |\n|---|---|---|---|---|\n${crs.map((cr) => `| ${cr.id} | ${cr.title} | ${this.calculateTotalScore(cr.scores).toFixed(2)} | ${cr.impact_category} | ${cr.ba_reasoning || cr.description} |`).join('\n')}\n\n---\n`;
 
-## Impact Statistics
-- **Total CRs:** ${result.stats.total_crs}
-- **🚨 Critical:** ${result.stats.critical}
-- **⚠️ High:** ${result.stats.high}
-- **📋 Medium:** ${result.stats.medium}
-- **📌 Low:** ${result.stats.low}
+    const details = crs
+      .map((cr) => {
+        const score = this.calculateTotalScore(cr.scores).toFixed(2);
+        const icon = this.getIcon(cr.impact_category);
+        return `## ${icon} CR ${cr.id}: ${cr.title} — Score: ${score} (${cr.impact_category})
+### Was ändert sich?
+${cr.ba_reasoning || cr.description}
 
-## Detailed CR Analysis
+### Betroffene Prozesse/Workflows
+${cr.affected_processes.map((p) => `- ${p}`).join('\n')}
 
-${result.crs.map((cr) => this.formatCR(cr)).join('\n\n---\n\n')}
+### Erforderliche Anpassungen
+${cr.adjustments.map((a) => `- **${a.system}** (${a.effort}): ${a.description}`).join('\n')}
+
+### Bewertung nach Kriterien
+- **Struktur:** ${cr.scores.structure_change}/3 × 0.40 = ${(cr.scores.structure_change * 0.4).toFixed(2)}
+- **Payment Flow:** ${cr.scores.payment_flow_impact}/3 × 0.25 = ${(cr.scores.payment_flow_impact * 0.25).toFixed(2)}
+- **Technisch:** ${cr.scores.technical_impact}/3 × 0.20 = ${(cr.scores.technical_impact * 0.2).toFixed(2)}
+- **Regulatorik:** ${cr.scores.regulatory_impact}/3 × 0.15 = ${(cr.scores.regulatory_impact * 0.15).toFixed(2)}
+**Gesamtscore:** ${score} → ${cr.impact_category}
+`;
+      })
+      .join('\n---\n');
+
+    return header + details;
+  }
+
+  private generateTechReport(crs: T2ChangeRequest[]): string {
+    const header = `# PHASE 2: TECHNISCHER BERICHT FÜR ENGINEERS\n\n`;
+    const details = crs
+      .map((cr) => {
+        return `## 🔧 ${cr.id} — ${cr.title}
+**Breaking Change:** ${cr.breaking_change ? '✅ JA' : '❌ NEIN'}
+**Migrations-Aufwand:** ${this.getMaxEffort(cr.adjustments)}
+
+### Betroffene Systeme
+${Array.from(new Set(cr.adjustments.map((a) => a.system)))
+            .map((s) => `- ${s}`)
+            .join('\n')}
+
+### Technische Details
+${cr.technical_analysis || 'Keine technischen Details verfügbar.'}
+
+### System-Auswirkungen & Migration
+${cr.adjustments.map((a) => `**${a.system}:** ${a.description} (Aufwand: ${a.effort})`).join('\n')}
+`;
+      })
+      .join('\n---\n');
+    return header + details;
+  }
+
+  private generateMgmtReport(
+    crs: T2ChangeRequest[],
+    stats: { critical: number; high: number; medium: number; low: number; total_crs: number },
+  ): string {
+    const recommendation =
+      stats.critical > 0 || crs.some((c) => c.breaking_change)
+        ? '⚠️ GO MIT BEDINGUNGEN'
+        : '✅ GO';
+
+    return `# PHASE 3: MANAGEMENT-BERICHT (Executive Summary)
+
+## Kurzfazit
+Analyse abgeschlossen. ${stats.total_crs} Change Requests analysiert.
+Status: ${stats.critical} Kritisch, ${stats.high} Hoch.
+Breaking Changes: ${crs.filter((c) => c.breaking_change).length}.
+
+## CR-Verteilung
+| Kategorie | Anzahl | CRs |
+|---|---|---|
+| 🚨 Kritisch | ${stats.critical} | ${crs
+        .filter((c) => c.impact_category === 'Critical')
+        .map((c) => c.id)
+        .join(', ')} |
+| ⚠️ Hoch | ${stats.high} | ${crs
+        .filter((c) => c.impact_category === 'High')
+        .map((c) => c.id)
+        .join(', ')} |
+| 📋 Mittel | ${stats.medium} | ${crs
+        .filter((c) => c.impact_category === 'Medium')
+        .map((c) => c.id)
+        .join(', ')} |
+| 📌 Niedrig | ${stats.low} | ${crs
+        .filter((c) => c.impact_category === 'Low')
+        .map((c) => c.id)
+        .join(', ')} |
+
+## Empfehlung
+**${recommendation}**
 `;
   }
 
-  private formatCR(cr: T2ChangeRequest): string {
-    const score = this.calculateTotalScore(cr.scores).toFixed(2);
-    const icon =
-      cr.impact_category === 'Critical'
-        ? '🚨'
-        : cr.impact_category === 'High'
-          ? '⚠️'
-          : cr.impact_category === 'Medium'
-            ? '📋'
-            : '📌';
+  private getIcon(category: string): string {
+    switch (category) {
+      case 'Critical':
+        return '🚨';
+      case 'High':
+        return '⚠️';
+      case 'Medium':
+        return '📋';
+      default:
+        return '📌';
+    }
+  }
 
-    return `### ${icon} ${cr.id}: ${cr.title}
-**Impact Category:** ${cr.impact_category} (Score: ${score})
-**Breaking Change:** ${cr.breaking_change ? '❌ YES' : '✅ No'}
-
-**Description:**
-${cr.description}
-
-**Scores:**
-- Structure: ${cr.scores.structure_change}/3
-- Payment Flow: ${cr.scores.payment_flow_impact}/3
-- Technical: ${cr.scores.technical_impact}/3
-- Regulatory: ${cr.scores.regulatory_impact}/3
-
-**Affected Processes:**
-${cr.affected_processes.map((p) => `- ${p}`).join('\n')}
-
-**Required Adjustments:**
-${cr.adjustments.map((a) => `- **${a.system}** (${a.effort}): ${a.description}`).join('\n')}
-`;
+  private getMaxEffort(adjustments: { effort: string }[]): string {
+    if (adjustments.some((a) => a.effort === 'High')) return '🔴 HOCH';
+    if (adjustments.some((a) => a.effort === 'Medium')) return '🟡 MITTEL';
+    return '🟢 NIEDRIG';
   }
 
   private calculateTotalScore(s: ImpactScores): number {
